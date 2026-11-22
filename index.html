@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Events | Event Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="container">
+
+    <div class="eyebrow">
+      <span class="eyebrow-mark"></span>
+      <span>Campus Life</span>
+    </div>
+
+    <h1>Campus Events<span class="title-dot">.</span></h1>
+
+    <p class="intro">
+      Temukan kegiatan kampus yang menarik untuk diikuti.
+      Cari berdasarkan nama kegiatan atau tanggal pelaksanaannya.
+    </p>
+
+    <section class="search-panel" aria-label="Pencarian kegiatan kampus">
+
+      <label for="searchInput">Cari kegiatan</label>
+
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Contoh: seminar, workshop, 24 November..."
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="list-header">
+        <h2>Daftar Kegiatan</h2>
+        <span id="resultCount" aria-live="polite"></span>
+      </div>
+
+      <div id="eventList" aria-live="polite"></div>
+
+    </section>
+
+    <p class="note">
+      Data kegiatan pada halaman ini merupakan contoh untuk keperluan praktikum.
+    </p>
+
+  </main>
+
+  <script>
+    // Data contoh kegiatan kampus.
+    const events = [
+      {
+        name: "Seminar Digital Marketing",
+        date: "2026-11-24",
+        dateLabel: "24 November 2026",
+        day: "24",
+        month: "Nov",
+        time: "10.00 WIB",
+        location: "Auditorium Kampus",
+        category: "Seminar"
+      },
+      {
+        name: "Workshop UI/UX Design",
+        date: "2026-11-26",
+        dateLabel: "26 November 2026",
+        day: "26",
+        month: "Nov",
+        time: "13.00 WIB",
+        location: "Lab Komputer 2",
+        category: "Workshop"
+      },
+      {
+        name: "Campus Career Fair",
+        date: "2026-11-28",
+        dateLabel: "28 November 2026",
+        day: "28",
+        month: "Nov",
+        time: "09.00 WIB",
+        location: "Gedung Serbaguna",
+        category: "Karier"
+      },
+      {
+        name: "Student Leadership Class",
+        date: "2026-11-30",
+        dateLabel: "30 November 2026",
+        day: "30",
+        month: "Nov",
+        time: "15.00 WIB",
+        location: "Ruang Seminar",
+        category: "Organisasi"
+      },
+      {
+        name: "Public Speaking Workshop",
+        date: "2026-12-02",
+        dateLabel: "2 Desember 2026",
+        day: "02",
+        month: "Des",
+        time: "13.00 WIB",
+        location: "Ruang Kelas A",
+        category: "Workshop"
+      },
+      {
+        name: "Business Plan Competition",
+        date: "2026-12-04",
+        dateLabel: "4 Desember 2026",
+        day: "04",
+        month: "Des",
+        time: "08.00 WIB",
+        location: "Aula Kampus",
+        category: "Kompetisi"
+      },
+      {
+        name: "Campus Art Exhibition",
+        date: "2026-12-06",
+        dateLabel: "6 Desember 2026",
+        day: "06",
+        month: "Des",
+        time: "10.00 WIB",
+        location: "Galeri Mahasiswa",
+        category: "Pameran"
+      },
+      {
+        name: "Webinar Data Analytics",
+        date: "2026-12-08",
+        dateLabel: "8 Desember 2026",
+        day: "08",
+        month: "Des",
+        time: "19.00 WIB",
+        location: "Online",
+        category: "Webinar"
+      },
+      {
+        name: "Student Organization Fair",
+        date: "2026-12-10",
+        dateLabel: "10 Desember 2026",
+        day: "10",
+        month: "Des",
+        time: "09.00 WIB",
+        location: "Lapangan Kampus",
+        category: "Organisasi"
+      },
+      {
+        name: "Volunteer Recruitment",
+        date: "2026-12-12",
+        dateLabel: "12 Desember 2026",
+        day: "12",
+        month: "Des",
+        time: "10.00 WIB",
+        location: "Student Center",
+        category: "Sosial"
+      },
+      {
+        name: "Photography Workshop",
+        date: "2026-12-14",
+        dateLabel: "14 Desember 2026",
+        day: "14",
+        month: "Des",
+        time: "13.00 WIB",
+        location: "Studio Multimedia",
+        category: "Workshop"
+      },
+      {
+        name: "Entrepreneurship Talkshow",
+        date: "2026-12-16",
+        dateLabel: "16 Desember 2026",
+        day: "16",
+        month: "Des",
+        time: "14.00 WIB",
+        location: "Auditorium Kampus",
+        category: "Seminar"
+      },
+      {
+        name: "Programming Bootcamp",
+        date: "2026-12-18",
+        dateLabel: "18 Desember 2026",
+        day: "18",
+        month: "Des",
+        time: "09.00 WIB",
+        location: "Lab Komputer 1",
+        category: "Akademik"
+      },
+      {
+        name: "Campus Sports Day",
+        date: "2026-12-20",
+        dateLabel: "20 Desember 2026",
+        day: "20",
+        month: "Des",
+        time: "07.00 WIB",
+        location: "Lapangan Olahraga",
+        category: "Olahraga"
+      },
+      {
+        name: "Year-End Student Gathering",
+        date: "2026-12-22",
+        dateLabel: "22 Desember 2026",
+        day: "22",
+        month: "Des",
+        time: "16.00 WIB",
+        location: "Taman Kampus",
+        category: "Sosial"
+      }
+    ];
+
+    // Mengambil elemen HTML.
+    const searchInput = document.getElementById("searchInput");
+    const eventList = document.getElementById("eventList");
+    const resultCount = document.getElementById("resultCount");
+
+    // Menampilkan daftar kegiatan.
+    function renderEvents(data) {
+
+      // Menghapus hasil sebelumnya.
+      while (eventList.firstChild) {
+        eventList.removeChild(eventList.firstChild);
+      }
+
+      resultCount.textContent = data.length + " kegiatan";
+
+      // Menampilkan pesan jika data tidak ditemukan.
+      if (data.length === 0) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+
+        const icon = document.createElement("div");
+        icon.className = "empty-icon";
+        icon.textContent = "🔎";
+
+        const title = document.createElement("p");
+        title.className = "empty-title";
+        title.textContent = "Kegiatan tidak ditemukan";
+
+        const message = document.createElement("p");
+        message.className = "empty-text";
+        message.textContent = "Coba kata kunci atau tanggal yang lain.";
+
+        emptyState.appendChild(icon);
+        emptyState.appendChild(title);
+        emptyState.appendChild(message);
+
+        eventList.appendChild(emptyState);
+        return;
+      }
+
+      // Membuat kartu kegiatan secara dinamis.
+      data.forEach(function(event) {
+
+        const card = document.createElement("article");
+        card.className = "event-card";
+
+        const dateBox = document.createElement("div");
+        dateBox.className = "date-box";
+
+        const day = document.createElement("span");
+        day.className = "date-day";
+        day.textContent = event.day;
+
+        const month = document.createElement("span");
+        month.className = "date-month";
+        month.textContent = event.month;
+
+        const details = document.createElement("div");
+        details.className = "event-details";
+
+        const category = document.createElement("span");
+        category.className = "event-category";
+        category.textContent = event.category;
+
+        const name = document.createElement("h3");
+        name.className = "event-name";
+        name.textContent = event.name;
+
+        const meta = document.createElement("p");
+        meta.className = "event-meta";
+        meta.textContent =
+          event.dateLabel + " · " +
+          event.time + " · " +
+          event.location;
+
+        dateBox.appendChild(day);
+        dateBox.appendChild(month);
+
+        details.appendChild(category);
+        details.appendChild(name);
+        details.appendChild(meta);
+
+        card.appendChild(dateBox);
+        card.appendChild(details);
+
+        eventList.appendChild(card);
+      });
+    }
+
+    // Live search menggunakan event input dan array.filter().
+    searchInput.addEventListener("input", function() {
+
+      const keyword = searchInput.value.toLowerCase().trim();
+
+      const filteredEvents = events.filter(function(event) {
+
+        const searchableText =
+          event.name + " " +
+          event.dateLabel + " " +
+          event.date + " " +
+          event.category + " " +
+          event.location;
+
+        return searchableText.toLowerCase().includes(keyword);
+      });
+
+      renderEvents(filteredEvents);
+    });
+
+    // Menampilkan semua kegiatan saat halaman dibuka.
+    renderEvents(events);
+  </script>
+</body>
+</html>
